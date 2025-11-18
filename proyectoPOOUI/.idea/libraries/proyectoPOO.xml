@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="proyectoPOO">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../proyectoPOO/out/artifacts/proyectoPOO_jar/proyectoPOO.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../proyectoTercerTrimestr/proyectoPOO/out/artifacts/proyectoPOO_jar/proyectoPOO.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
