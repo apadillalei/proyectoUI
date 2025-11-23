@@ -2,6 +2,22 @@ package cr.ac.ucenfotec.ui;
 
 import cr.ac.ucenfotec.tl.Controller;
 
+/**
+ * Menú principal del sistema HelpDesk U.
+ * Este menú se muestra únicamente después de un inicio de sesión exitoso
+ * y permite al usuario navegar hacia los distintos submenús del sistema.
+ *
+ * Desde aquí se accede a:
+ * <ul>
+ *     <li>Gestión de departamentos</li>
+ *     <li>Gestión de tickets</li>
+ *     <li>Gestión de diccionarios y palabras</li>
+ * </ul>
+ *
+ * La clase forma parte de la capa de Interfaz de Usuario (UI) y delega
+ * toda la lógica al {@link Controller}.
+ *
+ */
 public class MenuPrincipal {
 
     private IO io = new IO();
@@ -11,6 +27,11 @@ public class MenuPrincipal {
     private MenuTicket       menuTicket;
     private MenuDiccionario  menuDiccionario;
 
+    /**
+     * Constructor del menú principal.
+     *
+     * @param controller instancia del controlador principal del sistema.
+     */
     public MenuPrincipal(Controller controller) {
         this.controller = controller;
         this.menuDepartamento = new MenuDepartamento(controller);
@@ -18,6 +39,10 @@ public class MenuPrincipal {
         this.menuDiccionario  = new MenuDiccionario(controller);
     }
 
+    /**
+     * Inicia el menú principal y muestra sus opciones en un ciclo.
+     * El menú se ejecuta hasta que el usuario selecciona la opción 0 (Salir).
+     */
     public void iniciar(){
         int op;
         do{

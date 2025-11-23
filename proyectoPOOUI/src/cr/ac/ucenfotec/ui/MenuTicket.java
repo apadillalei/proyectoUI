@@ -7,15 +7,33 @@ import cr.ac.ucenfotec.tl.Controller;
 
 import java.util.List;
 
+/**
+ * Menú responsable de la gestión de tickets dentro del sistema.
+ * Permite registrar nuevos tickets y listar los existentes.
+ *
+ * La lógica de negocio (creación y almacenamiento del ticket)
+ * es manejada por el {@link Controller}, mientras que este menú
+ * se centra en la interacción con el usuario.
+ *
+ */
 public class MenuTicket {
 
     private IO io = new IO();
     private Controller controller;
 
+    /**
+     * Constructor del menú de tickets.
+     *
+     * @param controller controlador principal para delegar las operaciones.
+     */
     public MenuTicket(Controller controller) {
         this.controller = controller;
     }
 
+    /**
+     * Muestra el menú de tickets y permite elegir entre registrar
+     * un nuevo ticket, listar los existentes o volver al menú anterior.
+     */
     public void mostrar() {
         int op;
         do {
@@ -33,12 +51,18 @@ public class MenuTicket {
         } while (op != 0);
     }
 
+    /**
+     * Proceso de registro de un nuevo ticket.
+     * Se valida que exista al menos un usuario y un departamento,
+     * se seleccionan desde listas y luego se solicita la información
+     * del ticket al usuario.
+     */
     private void registrar() {
         List<Usuario> usuarios = controller.obtenerUsuarios();
         List<Departamento> departamentos = controller.obtenerDepartamentos();
 
         if (usuarios.isEmpty() || departamentos.isEmpty()) {
-            System.out.println(" Debes tener al menos 1 Usuario y 1 Departamento registrados.");
+            System.out.println("Debes tener al menos 1 Usuario y 1 Departamento registrados.");
             return;
         }
 
@@ -68,6 +92,10 @@ public class MenuTicket {
         System.out.println("Ticket registrado.");
     }
 
+    /**
+     * Lista todos los tickets registrados en el sistema.
+     * Si no existen tickets, muestra un mensaje indicándolo.
+     */
     private void listar() {
         System.out.println("\nTickets registrados:");
         List<Ticket> tickets = controller.obtenerTickets();
