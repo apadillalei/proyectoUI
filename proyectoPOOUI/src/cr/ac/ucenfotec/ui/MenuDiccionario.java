@@ -1,7 +1,5 @@
 package cr.ac.ucenfotec.ui;
 
-import cr.ac.ucenfotec.bl.entities.Diccionario;
-import cr.ac.ucenfotec.bl.entities.Palabra;
 import cr.ac.ucenfotec.tl.Controller;
 
 import java.util.List;
@@ -14,7 +12,6 @@ import java.util.List;
  * Este módulo será la base para la futura funcionalidad de análisis
  * Bag of Words (BoW), aunque en este avance solo se trabaja con
  * almacenamiento en memoria.
- *
  */
 public class MenuDiccionario {
 
@@ -72,16 +69,14 @@ public class MenuDiccionario {
      * y su categoría.
      */
     private void agregarPalabra(){
-        List<Diccionario> diccionarios = controller.obtenerDiccionarios();
-        if (diccionarios.isEmpty()){
+        if (!controller.hayDiccionarios()){
             System.out.println("No hay diccionarios. Crea uno primero.");
             return;
         }
 
         listarDiccionarios();
         int id = io.i("Id del diccionario: ");
-        Diccionario dic = controller.buscarDiccionarioPorId(id);
-        if (dic == null){
+        if (!controller.existeDiccionario(id)){
             System.out.println("Diccionario no encontrado.");
             return;
         }
@@ -89,7 +84,7 @@ public class MenuDiccionario {
         String texto = io.str("Palabra: ");
         String categoria = io.str("Categoría/Emoción: ");
 
-        controller.agregarPalabraADiccionario(dic, texto, categoria);
+        controller.agregarPalabraADiccionario(id, texto, categoria);
         System.out.println("Palabra agregada.");
     }
 
@@ -98,7 +93,7 @@ public class MenuDiccionario {
      */
     private void listarDiccionarios(){
         System.out.println("\nDiccionarios:");
-        List<Diccionario> lista = controller.obtenerDiccionarios();
+        List<String> lista = controller.obtenerDiccionariosComoTexto();
         if (lista.isEmpty()){
             System.out.println("(sin diccionarios)");
             return;
@@ -111,22 +106,20 @@ public class MenuDiccionario {
      * Si el diccionario no existe o no tiene palabras, se notifica en consola.
      */
     private void listarPalabras(){
-        List<Diccionario> diccionarios = controller.obtenerDiccionarios();
-        if (diccionarios.isEmpty()){
+        if (!controller.hayDiccionarios()){
             System.out.println("No hay diccionarios. Crea uno primero.");
             return;
         }
 
         listarDiccionarios();
         int id = io.i("Id del diccionario: ");
-        Diccionario dic = controller.buscarDiccionarioPorId(id);
-        if (dic == null){
+        if (!controller.existeDiccionario(id)){
             System.out.println("Diccionario no encontrado.");
             return;
         }
 
         System.out.println("\nPalabras:");
-        List<Palabra> palabras = controller.obtenerPalabrasDeDiccionario(dic);
+        List<String> palabras = controller.obtenerPalabrasDeDiccionarioComoTexto(id);
         if (palabras == null || palabras.isEmpty()){
             System.out.println("(sin palabras)");
             return;

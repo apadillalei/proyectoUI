@@ -1,6 +1,5 @@
 package cr.ac.ucenfotec.ui;
 
-import cr.ac.ucenfotec.bl.entities.Departamento;
 import cr.ac.ucenfotec.tl.Controller;
 
 /**
@@ -60,12 +59,17 @@ public class MenuDepartamento {
 
     /**
      * Lista todos los departamentos registrados en el sistema
-     * utilizando el controlador para obtener los datos.
+     * utilizando el controlador para obtener los datos en formato de texto.
      */
     private void listar(){
         System.out.println("\nDepartamentos registrados:");
-        for (Departamento d : controller.obtenerDepartamentos()) {
-            System.out.println(d);
+        var lista = controller.obtenerDepartamentosComoTexto();
+        if (lista.isEmpty()) {
+            System.out.println("(sin departamentos)");
+            return;
+        }
+        for (String linea : lista) {
+            System.out.println(linea);
         }
     }
 }

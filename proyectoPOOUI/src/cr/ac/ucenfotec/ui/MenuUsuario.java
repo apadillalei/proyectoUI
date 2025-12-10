@@ -1,6 +1,5 @@
 package cr.ac.ucenfotec.ui;
 
-import cr.ac.ucenfotec.bl.entities.Usuario;
 import cr.ac.ucenfotec.tl.Controller;
 
 /**
@@ -53,9 +52,9 @@ public class MenuUsuario {
     private void registrar() {
         String nombre = io.str("Nombre completo: ");
         String correo = io.str("Correo: ");
-        String pass = io.str("Contraseña: ");
-        String tel = io.str("Teléfono: ");
-        String rol = io.str("Rol: ");
+        String pass   = io.str("Contraseña: ");
+        String tel    = io.str("Teléfono: ");
+        String rol    = io.str("Rol: ");
 
         controller.registrarUsuario(nombre, correo, pass, tel, rol);
         System.out.println("Usuario registrado.");
@@ -63,12 +62,17 @@ public class MenuUsuario {
 
     /**
      * Muestra en consola la lista de usuarios registrados
-     * obtenida desde el Controller.
+     * obtenida desde el Controller en formato de texto.
      */
     private void listar() {
         System.out.println("\nUsuarios registrados:");
-        for (Usuario u : controller.obtenerUsuarios()) {
-            System.out.println(u);
+        var lista = controller.obtenerUsuariosComoTexto();
+        if (lista.isEmpty()) {
+            System.out.println("(sin usuarios)");
+            return;
+        }
+        for (String linea : lista) {
+            System.out.println(linea);
         }
     }
 }

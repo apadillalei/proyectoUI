@@ -1,8 +1,5 @@
 package cr.ac.ucenfotec.ui;
 
-import cr.ac.ucenfotec.bl.entities.Departamento;
-import cr.ac.ucenfotec.bl.entities.Ticket;
-import cr.ac.ucenfotec.bl.entities.Usuario;
 import cr.ac.ucenfotec.tl.Controller;
 
 import java.util.List;
@@ -14,7 +11,6 @@ import java.util.List;
  * La lógica de negocio (creación y almacenamiento del ticket)
  * es manejada por el {@link Controller}, mientras que este menú
  * se centra en la interacción con el usuario.
- *
  */
 public class MenuTicket {
 
@@ -58,28 +54,25 @@ public class MenuTicket {
      * del ticket al usuario.
      */
     private void registrar() {
-        List<Usuario> usuarios = controller.obtenerUsuarios();
-        List<Departamento> departamentos = controller.obtenerDepartamentos();
-
-        if (usuarios.isEmpty() || departamentos.isEmpty()) {
+        if (!controller.hayUsuarios() || !controller.hayDepartamentos()) {
             System.out.println("Debes tener al menos 1 Usuario y 1 Departamento registrados.");
             return;
         }
 
         System.out.println("\n> Elige Usuario reportante:");
+        List<String> usuarios = controller.obtenerUsuariosComoTexto();
         usuarios.forEach(System.out::println);
         int uid = io.i("Id de usuario: ");
-        Usuario u = controller.buscarUsuarioPorId(uid);
-        if (u == null) {
+        if (!controller.existeUsuario(uid)) {
             System.out.println("Usuario no encontrado.");
             return;
         }
 
         System.out.println("\n> Elige Departamento asignado:");
+        List<String> departamentos = controller.obtenerDepartamentosComoTexto();
         departamentos.forEach(System.out::println);
         int did = io.i("Id de departamento: ");
-        Departamento d = controller.buscarDepartamentoPorId(did);
-        if (d == null) {
+        if (!controller.existeDepartamento(did)) {
             System.out.println("Departamento no encontrado.");
             return;
         }
@@ -88,7 +81,7 @@ public class MenuTicket {
         String desc   = io.str("Descripción: ");
         String estado = io.str("Estado (nuevo/en progreso/cerrado): ");
 
-        controller.registrarTicket(titulo, desc, estado, u, d);
+        controller.registrarTicket(titulo, desc, estado, uid, did);
         System.out.println("Ticket registrado.");
     }
 
@@ -98,7 +91,7 @@ public class MenuTicket {
      */
     private void listar() {
         System.out.println("\nTickets registrados:");
-        List<Ticket> tickets = controller.obtenerTickets();
+        List<String> tickets = controller.obtenerTicketsComoTexto();
         if (tickets.isEmpty()) {
             System.out.println("(sin tickets)");
             return;

@@ -1,100 +1,154 @@
 package cr.ac.ucenfotec.tl;
 
-import cr.ac.ucenfotec.bl.entities.Departamento;
-import cr.ac.ucenfotec.bl.entities.Diccionario;
-import cr.ac.ucenfotec.bl.entities.Palabra;
-import cr.ac.ucenfotec.bl.entities.Ticket;
-import cr.ac.ucenfotec.bl.entities.Usuario;
 import cr.ac.ucenfotec.bl.logic.Gestor;
 
 import java.util.List;
 
+/**
+ * Controlador principal de la capa de UI.
+ * Actúa como puente entre los menús y la lógica de negocio (Gestor).
+ *
+ * La UI NUNCA maneja objetos de negocio directamente. Únicamente
+ * utiliza tipos simples (String, int, List<String>) y delega toda la
+ * lógica y acceso a entidades al Gestor.
+ */
 public class Controller {
 
-    private Gestor gestor;
-    private Usuario usuarioActual;
+    private final Gestor gestor;
+    /** Nombre del usuario autenticado actualmente (no exponemos el objeto Usuario). */
+    private String nombreUsuarioActual;
 
     public Controller() {
         this.gestor = new Gestor();
     }
 
-    // ========== USUARIOS ==========
+    // =========================================================
+    // USUARIOS
+    // =========================================================
 
-    public void registrarUsuario(String nombre, String correo, String pass, String tel, String rol) {
-        Usuario u = new Usuario(nombre, correo, pass, tel, rol);
-        gestor.guardarUsuario(u);
+    public void registrarUsuario(String nombre,
+                                 String correo,
+                                 String pass,
+                                 String tel,
+                                 String rol) {
+        gestor.registrarUsuario(nombre, correo, pass, tel, rol);
     }
 
-    public List<Usuario> obtenerUsuarios() {
-        return gestor.listarUsuarios();
+    /** Indica si existe al menos un usuario registrado. */
+    public boolean hayUsuarios() {
+        return !gestor.listarUsuarios().isEmpty();
     }
 
-    public Usuario buscarUsuarioPorId(int id) {
-        return gestor.buscarUsuarioPorId(id);
+    /** Verifica si existe un usuario con el id indicado. */
+    public boolean existeUsuario(int id) {
+        return gestor.buscarUsuarioPorId(id) != null;
     }
 
-    // ========== LOGIN ==========
-
+    /**
+     * Intenta iniciar sesión y guarda internamente el nombre del usuario autenticado.
+     *
+     * @return true si las credenciales son válidas, false en caso contrario.
+     */
     public boolean iniciarSesion(String correo, String pass) {
-        Usuario u = gestor.login(correo, pass);
-        if (u != null) {
-            usuarioActual = u;
+        String nombre = gestor.iniciarSesion(correo, pass);
+        if (nombre != null) {
+            this.nombreUsuarioActual = nombre;
             return true;
         }
         return false;
     }
 
-    public Usuario getUsuarioActual() {
-        return usuarioActual;
+    /** Devuelve el nombre del usuario autenticado actualmente. */
+    public String getNombreUsuarioActual() {
+        return nombreUsuarioActual;
     }
 
-    // ========== DEPARTAMENTOS ==========
-
-    public void registrarDepartamento(String nombre, String desc, String contacto) {
-        Departamento d = new Departamento(nombre, desc, contacto);
-        gestor.guardarDepartamento(d);
+    /**
+     * Devuelve los usuarios en formato de texto para mostrar en la UI.
+     * Ej: "[1] Juan Pérez - juan@correo.com"
+     */
+    public List<String> obtenerUsuariosComoTexto() {
+        return gestor.listarUsuariosComoTexto();
     }
 
-    public List<Departamento> obtenerDepartamentos() {
-        return gestor.listarDepartamentos();
+    // =========================================================
+    // DEPARTAMENTOS
+    // =========================================================
+
+    public void registrarDepartamento(String nombre,
+                                      String desc,
+                                      String contacto) {
+        gestor.registrarDepartamento(nombre, desc, contacto);
     }
 
-    public Departamento buscarDepartamentoPorId(int id) {
-        return gestor.buscarDepartamentoPorId(id);
+    public boolean hayDepartamentos() {
+        return !gestor.listarDepartamentos().isEmpty();
     }
 
-    // ========== DICCIONARIOS ==========
+    public boolean existeDepartamento(int id) {
+        return gestor.buscarDepartamentoPorId(id) != null;
+    }
+
+    /** Devuelve los departamentos en formato texto para mostrarlos en la UI. */
+    public List<String> obtenerDepartamentosComoTexto() {
+        return gestor.listarDepartamentosComoTexto();
+    }
+
+    // =========================================================
+    // TICKETS
+    // =========================================================
+
+    /**
+     * Registra un ticket usando únicamente IDs de usuario y departamento.
+     * La búsqueda de las entidades se hace dentro del Gestor.
+     */
+    public void registrarTicket(String titulo,
+                                String desc,
+                                String estado,
+                                int idUsuario,
+                                int idDepartamento) {
+        gestor.registrarTicket(titulo, desc, estado, idUsuario, idDepartamento);
+    }
+
+    /** Devuelve los tickets en formato texto para la UI. */
+    public List<String> obtenerTicketsComoTexto() {
+        return gestor.listarTicketsComoTexto();
+    }
+
+    // =========================================================
+    // DICCIONARIOS Y PALABRAS
+    // =========================================================
 
     public void crearDiccionario(String tipo) {
-        Diccionario d = new Diccionario(tipo);
-        gestor.guardarDiccionario(d);
+        gestor.registrarDiccionario(tipo);
     }
 
-    public List<Diccionario> obtenerDiccionarios() {
-        return gestor.listarDiccionarios();
+    public boolean hayDiccionarios() {
+        return !gestor.listarDiccionarios().isEmpty();
     }
 
-    public Diccionario buscarDiccionarioPorId(int id) {
-        return gestor.buscarDiccionarioPorId(id);
+    public boolean existeDiccionario(int id) {
+        return gestor.buscarDiccionarioPorId(id) != null;
     }
 
-    public void agregarPalabraADiccionario(Diccionario dic, String texto, String categoria) {
-        Palabra p = new Palabra(texto, categoria);
-        gestor.agregarPalabraADiccionario(dic, p);
+    /** Devuelve los diccionarios en formato texto. */
+    public List<String> obtenerDiccionariosComoTexto() {
+        return gestor.listarDiccionariosComoTexto();
     }
 
-    public List<Palabra> obtenerPalabrasDeDiccionario(Diccionario dic) {
-        return gestor.listarPalabrasDeDiccionario(dic);
+    /**
+     * Agrega una palabra a un diccionario identificado por su id.
+     */
+    public void agregarPalabraADiccionario(int idDiccionario,
+                                           String texto,
+                                           String categoria) {
+        gestor.agregarPalabraADiccionario(idDiccionario, texto, categoria);
     }
 
-    // ========== TICKETS ==========
-
-    public void registrarTicket(String titulo, String desc, String estado, Usuario usuario, Departamento departamento) {
-        Ticket t = new Ticket(titulo, desc, estado, usuario, departamento);
-        gestor.guardarTicket(t);
-    }
-
-    public List<Ticket> obtenerTickets() {
-        return gestor.listarTickets();
+    /**
+     * Devuelve las palabras de un diccionario en formato texto.
+     */
+    public List<String> obtenerPalabrasDeDiccionarioComoTexto(int idDiccionario) {
+        return gestor.listarPalabrasDeDiccionarioComoTexto(idDiccionario);
     }
 }

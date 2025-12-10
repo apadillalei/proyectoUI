@@ -46,19 +46,19 @@ public class MenuAutenticacion {
             switch (op) {
                 case 1 -> menuUsuario.mostrar();
                 case 2 -> {
-                    if (controller.obtenerUsuarios().isEmpty()) {
+                    if (!controller.hayUsuarios()) {
                         System.out.println("No hay usuarios registrados.");
                         break;
                     }
 
                     System.out.println("\n=== INICIO DE SESIÓN ===");
                     String correo = io.str("Correo: ");
-                    String pass = io.str("Contraseña: ");
+                    String pass   = io.str("Contraseña: ");
 
                     boolean ok = controller.iniciarSesion(correo, pass);
                     if (ok) {
                         System.out.println("Bienvenido, "
-                                + controller.getUsuarioActual().getNombre() + "!");
+                                + controller.getNombreUsuarioActual() + "!");
                         logged = true;
                     } else {
                         System.out.println("Credenciales incorrectas.");
