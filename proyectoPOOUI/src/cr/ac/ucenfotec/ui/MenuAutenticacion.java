@@ -2,36 +2,17 @@ package cr.ac.ucenfotec.ui;
 
 import cr.ac.ucenfotec.tl.Controller;
 
-/**
- * Menú encargado de gestionar el proceso de autenticación del sistema.
- * Permite registrar usuarios, iniciar sesión y validar credenciales.
- *
- * Esta clase pertenece a la capa de UI, por lo que su función es únicamente
- * interactuar con el usuario y delegar la lógica al Controller.
- */
 public class MenuAutenticacion {
 
     private IO io = new IO();
     private Controller controller;
     private MenuUsuario menuUsuario;
 
-    /**
-     * Constructor del menú de autenticación.
-     *
-     * @param controller Instancia del controlador que gestiona la lógica de negocio.
-     */
     public MenuAutenticacion(Controller controller) {
         this.controller = controller;
         this.menuUsuario = new MenuUsuario(controller);
     }
 
-    /**
-     * Inicia el flujo de autenticación. Presenta el menú principal inicial,
-     * permite registrar usuarios o iniciar sesión.
-     *
-     * @return true si el usuario logró iniciar sesión correctamente,
-     *         false si el programa se cierra.
-     */
     public boolean iniciar() {
         int op;
         boolean logged = false;
@@ -47,7 +28,7 @@ public class MenuAutenticacion {
                 case 1 -> menuUsuario.mostrar();
                 case 2 -> {
                     if (!controller.hayUsuarios()) {
-                        System.out.println("No hay usuarios registrados.");
+                        System.out.println("No hay usuarios registrados. Registra uno primero.");
                         break;
                     }
 
@@ -57,8 +38,8 @@ public class MenuAutenticacion {
 
                     boolean ok = controller.iniciarSesion(correo, pass);
                     if (ok) {
-                        System.out.println("Bienvenido, "
-                                + controller.getNombreUsuarioActual() + "!");
+                        System.out.println("Sesión iniciada. Bienvenido, " +
+                                controller.getNombreUsuarioActual() + "!");
                         logged = true;
                     } else {
                         System.out.println("Credenciales incorrectas.");
@@ -71,7 +52,9 @@ public class MenuAutenticacion {
                 default -> System.out.println("Opción inválida.");
             }
 
-            if (logged) return true;
+            if (logged) {
+                return true;
+            }
 
         } while (true);
     }
