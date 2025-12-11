@@ -40,8 +40,13 @@ public class MenuUsuario {
         String tel    = io.str("Teléfono: ");
         String rol    = io.str("Rol: ");
 
-        controller.registrarUsuario(nombre, correo, pass, tel, rol);
-        System.out.println("Usuario registrado.");
+        boolean ok = controller.registrarUsuario(nombre, correo, pass, tel, rol);
+
+        if (ok) {
+            System.out.println(" Usuario registrado correctamente.");
+        } else {
+            System.out.println("Ya existe un usuario con ese correo. Intenta con otro.");
+        }
     }
 
     private void listar() {

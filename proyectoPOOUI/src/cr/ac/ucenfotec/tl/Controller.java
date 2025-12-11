@@ -23,8 +23,12 @@ public class Controller {
     // USUARIOS
     // =========================================================
 
-    public void registrarUsuario(String nombre, String correo, String pass, String tel, String rol) {
-        gestor.registrarUsuario(nombre, correo, pass, tel, rol);
+    /**
+     * Intenta registrar un usuario.
+     * @return true si se registró, false si el correo ya existía.
+     */
+    public boolean registrarUsuario(String nombre, String correo, String pass, String tel, String rol) {
+        return gestor.registrarUsuario(nombre, correo, pass, tel, rol);
     }
 
     public List<Usuario> obtenerUsuarios() {
@@ -170,5 +174,19 @@ public class Controller {
             }
         }
         return out;
+    }
+
+    // =========================================================
+    // ANÁLISIS BoW
+    // =========================================================
+
+    /**
+     * Pide al Gestor que ejecute el análisis Bag of Words sobre una descripción.
+     *
+     * @param descripcion texto del ticket a analizar.
+     * @return arreglo [estadoAnimo, categoriaTecnica].
+     */
+    public String[] analizarDescripcionTicket(String descripcion) {
+        return gestor.analizarDescripcionTicket(descripcion);
     }
 }

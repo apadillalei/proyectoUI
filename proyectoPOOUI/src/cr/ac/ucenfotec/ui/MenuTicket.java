@@ -60,6 +60,14 @@ public class MenuTicket {
 
         controller.registrarTicket(titulo, desc, estado, uid, did);
         System.out.println("Ticket registrado.");
+
+        // ====== ANÁLISIS BoW SOBRE LA DESCRIPCIÓN ======
+        String[] analisis = controller.analizarDescripcionTicket(desc);
+
+        System.out.println("\n>>> Análisis automático de la descripción (BoW) <<<");
+        System.out.println("Estado de ánimo detectado: " + analisis[0]);
+        System.out.println("Categoría técnica sugerida: " + analisis[1]);
+        System.out.println("---------------------------------------------------");
     }
 
     private void listar() {
