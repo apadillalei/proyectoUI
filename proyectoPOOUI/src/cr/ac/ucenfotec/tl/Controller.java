@@ -6,10 +6,6 @@ import cr.ac.ucenfotec.bl.logic.Gestor;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Controlador que actúa como puente entre la capa de UI y la capa de lógica.
- * La UI sólo interactúa con tipos simples (String, int, List<String>).
- */
 public class Controller {
 
     private final Gestor gestor;
@@ -23,10 +19,6 @@ public class Controller {
     // USUARIOS
     // =========================================================
 
-    /**
-     * Intenta registrar un usuario.
-     * @return true si se registró, false si el correo ya existía.
-     */
     public boolean registrarUsuario(String nombre, String correo, String pass, String tel, String rol) {
         return gestor.registrarUsuario(nombre, correo, pass, tel, rol);
     }
@@ -53,6 +45,19 @@ public class Controller {
 
     public Usuario buscarUsuarioPorId(int id) {
         return gestor.buscarUsuarioPorId(id);
+    }
+
+    public boolean actualizarUsuario(int id,
+                                     String nombre,
+                                     String correo,
+                                     String pass,
+                                     String tel,
+                                     String rol) {
+        return gestor.actualizarUsuario(id, nombre, correo, pass, tel, rol);
+    }
+
+    public boolean eliminarUsuario(int id) {
+        return gestor.eliminarUsuario(id);
     }
 
     // ================= LOGIN =================
@@ -100,6 +105,17 @@ public class Controller {
 
     public Departamento buscarDepartamentoPorId(int id) {
         return gestor.buscarDepartamentoPorId(id);
+    }
+
+    public boolean actualizarDepartamento(int id,
+                                          String nombre,
+                                          String desc,
+                                          String contacto) {
+        return gestor.actualizarDepartamento(id, nombre, desc, contacto);
+    }
+
+    public boolean eliminarDepartamento(int id) {
+        return gestor.eliminarDepartamento(id);
     }
 
     // =========================================================
@@ -157,8 +173,16 @@ public class Controller {
                 .orElse(null);
     }
 
-    public void agregarPalabraADiccionario(int idDiccionario, String texto, String categoria) {
-        gestor.agregarPalabraADiccionario(idDiccionario, texto, categoria);
+    public boolean actualizarDiccionario(int idDiccionario, String nuevoTipo) {
+        return gestor.actualizarDiccionario(idDiccionario, nuevoTipo);
+    }
+
+    public boolean eliminarDiccionario(int idDiccionario) {
+        return gestor.eliminarDiccionario(idDiccionario);
+    }
+
+    public boolean agregarPalabraADiccionario(int idDiccionario, String texto, String categoria) {
+        return gestor.agregarPalabraADiccionario(idDiccionario, texto, categoria);
     }
 
     public List<Palabra> obtenerPalabrasDeDiccionario(int idDiccionario) {
@@ -176,17 +200,26 @@ public class Controller {
         return out;
     }
 
+    public boolean actualizarPalabraEnDiccionario(int idDiccionario,
+                                                  String textoOriginal,
+                                                  String nuevoTexto,
+                                                  String nuevaCategoria) {
+        return gestor.actualizarPalabraEnDiccionario(idDiccionario, textoOriginal, nuevoTexto, nuevaCategoria);
+    }
+
+    public boolean eliminarPalabraDeDiccionario(int idDiccionario, String texto) {
+        return gestor.eliminarPalabraDeDiccionario(idDiccionario, texto);
+    }
+
     // =========================================================
     // ANÁLISIS BoW
     // =========================================================
 
-    /**
-     * Pide al Gestor que ejecute el análisis Bag of Words sobre una descripción.
-     *
-     * @param descripcion texto del ticket a analizar.
-     * @return arreglo [estadoAnimo, categoriaTecnica].
-     */
     public String[] analizarDescripcionTicket(String descripcion) {
         return gestor.analizarDescripcionTicket(descripcion);
+    }
+
+    public String[] analizarDescripcionTicketDetallado(String descripcion) {
+        return gestor.analizarDescripcionTicketDetallado(descripcion);
     }
 }
