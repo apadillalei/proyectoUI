@@ -6,11 +6,32 @@ import cr.ac.ucenfotec.bl.logic.Gestor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controlador principal del sistema HelpDesk U.
+ * <p>
+ * Se ubica en la capa de Lógica de Aplicación (TL – Translation Layer).
+ * Su función es coordinar la comunicación entre la Interfaz de Usuario (UI)
+ * y la capa de lógica de negocio {@link Gestor}.
+ * </p>
+ *
+ * El Controller:
+ * <ul>
+ *     <li>Orquesta las operaciones de usuarios, departamentos, tickets y diccionarios.</li>
+ *     <li>Mantiene el estado de sesión del usuario actual.</li>
+ *     <li>Proporciona métodos simplificados para la UI.</li>
+ * </ul>
+ */
 public class Controller {
 
+    /** Gestor que ejecuta la lógica de negocio. */
     private final Gestor gestor;
+
+    /** Usuario actualmente autenticado en el sistema. */
     private Usuario usuarioActual;
 
+    /**
+     * Construye el controlador principal instanciando el {@link Gestor}.
+     */
     public Controller() {
         this.gestor = new Gestor();
     }
@@ -19,14 +40,32 @@ public class Controller {
     // USUARIOS
     // =========================================================
 
+    /**
+     * Registra un nuevo usuario.
+     *
+     * @param nombre nombre completo
+     * @param correo correo electrónico
+     * @param pass   contraseña
+     * @param tel    teléfono
+     * @param rol    rol dentro del sistema
+     * @return true si se registró exitosamente, false si el correo ya existe
+     */
     public boolean registrarUsuario(String nombre, String correo, String pass, String tel, String rol) {
         return gestor.registrarUsuario(nombre, correo, pass, tel, rol);
     }
 
+    /**
+     * @return lista completa de usuarios del sistema.
+     */
     public List<Usuario> obtenerUsuarios() {
         return gestor.listarUsuarios();
     }
 
+    /**
+     * Convierte los usuarios a texto para mostrarlos en consola.
+     *
+     * @return lista de representaciones textuales de usuarios
+     */
     public List<String> obtenerUsuariosComoTexto() {
         List<String> out = new ArrayList<>();
         for (Usuario u : obtenerUsuarios()) {
@@ -35,18 +74,33 @@ public class Controller {
         return out;
     }
 
+    /**
+     * @return true si existen usuarios registrados.
+     */
     public boolean hayUsuarios() {
         return !obtenerUsuarios().isEmpty();
     }
 
+    /**
+     * Verifica si un usuario existe por su ID.
+     *
+     * @param id identificador del usuario
+     * @return true si existe, false si no
+     */
     public boolean existeUsuario(int id) {
         return gestor.buscarUsuarioPorId(id) != null;
     }
 
+    /**
+     * Obtiene un usuario por id.
+     */
     public Usuario buscarUsuarioPorId(int id) {
         return gestor.buscarUsuarioPorId(id);
     }
 
+    /**
+     * Actualiza la información de un usuario existente.
+     */
     public boolean actualizarUsuario(int id,
                                      String nombre,
                                      String correo,
@@ -56,12 +110,24 @@ public class Controller {
         return gestor.actualizarUsuario(id, nombre, correo, pass, tel, rol);
     }
 
+    /**
+     * Elimina un usuario del sistema.
+     */
     public boolean eliminarUsuario(int id) {
         return gestor.eliminarUsuario(id);
     }
 
-    // ================= LOGIN =================
+    // =========================================================
+    // AUTENTICACIÓN
+    // =========================================================
 
+    /**
+     * Intenta iniciar sesión con las credenciales proporcionadas.
+     *
+     * @param correo correo ingresado
+     * @param pass   contraseña ingresada
+     * @return true si el login fue exitoso
+     */
     public boolean iniciarSesion(String correo, String pass) {
         Usuario u = gestor.login(correo, pass);
         if (u != null) {
@@ -71,6 +137,9 @@ public class Controller {
         return false;
     }
 
+    /**
+     * @return nombre del usuario autenticado o null si no hay sesión activa.
+     */
     public String getNombreUsuarioActual() {
         return (usuarioActual == null) ? null : usuarioActual.getNombre();
     }
@@ -79,14 +148,23 @@ public class Controller {
     // DEPARTAMENTOS
     // =========================================================
 
+    /**
+     * Registra un nuevo departamento.
+     */
     public void registrarDepartamento(String nombre, String desc, String contacto) {
         gestor.registrarDepartamento(nombre, desc, contacto);
     }
 
+    /**
+     * @return lista de departamentos.
+     */
     public List<Departamento> obtenerDepartamentos() {
         return gestor.listarDepartamentos();
     }
 
+    /**
+     * Convierte los departamentos a texto para impresión.
+     */
     public List<String> obtenerDepartamentosComoTexto() {
         List<String> out = new ArrayList<>();
         for (Departamento d : obtenerDepartamentos()) {
@@ -95,10 +173,16 @@ public class Controller {
         return out;
     }
 
+    /**
+     * @return true si existen departamentos registrados.
+     */
     public boolean hayDepartamentos() {
         return !obtenerDepartamentos().isEmpty();
     }
 
+    /**
+     * Verifica si un departamento existe por su ID.
+     */
     public boolean existeDepartamento(int id) {
         return gestor.buscarDepartamentoPorId(id) != null;
     }
@@ -122,10 +206,16 @@ public class Controller {
     // TICKETS
     // =========================================================
 
+    /**
+     * Registra un ticket con la información proporcionada.
+     */
     public void registrarTicket(String titulo, String desc, String estado, int idUsuario, int idDepartamento) {
         gestor.registrarTicket(titulo, desc, estado, idUsuario, idDepartamento);
     }
 
+    /**
+     * @return lista de tickets registrados.
+     */
     public List<Ticket> obtenerTickets() {
         return gestor.listarTickets();
     }
@@ -139,9 +229,12 @@ public class Controller {
     }
 
     // =========================================================
-    // DICCIONARIOS
+    // DICCIONARIOS Y PALABRAS
     // =========================================================
 
+    /**
+     * Crea un nuevo diccionario BoW (emocional o técnico).
+     */
     public void crearDiccionario(String tipo) {
         gestor.registrarDiccionario(tipo);
     }
@@ -212,13 +305,29 @@ public class Controller {
     }
 
     // =========================================================
-    // ANÁLISIS BoW
+    // ANÁLISIS BAG OF WORDS
     // =========================================================
 
+    /**
+     * Ejecuta un análisis rápido de BoW sobre la descripción del ticket.
+     *
+     * @return arreglo:
+     *      [0] estado emocional detectado,
+     *      [1] categoría técnica sugerida
+     */
     public String[] analizarDescripcionTicket(String descripcion) {
         return gestor.analizarDescripcionTicket(descripcion);
     }
 
+    /**
+     * Ejecuta un análisis detallado de BoW.
+     *
+     * @return arreglo:
+     *      [0] estado emocional,
+     *      [1] categoría técnica,
+     *      [2] vector TF como texto,
+     *      [3] palabras detectadas
+     */
     public String[] analizarDescripcionTicketDetallado(String descripcion) {
         return gestor.analizarDescripcionTicketDetallado(descripcion);
     }

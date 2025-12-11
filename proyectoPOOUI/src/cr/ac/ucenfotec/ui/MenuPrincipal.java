@@ -3,34 +3,35 @@ package cr.ac.ucenfotec.ui;
 import cr.ac.ucenfotec.tl.Controller;
 
 /**
- * Menú principal del sistema HelpDesk U.
- * Este menú se muestra únicamente después de un inicio de sesión exitoso
- * y permite al usuario navegar hacia los distintos submenús del sistema.
+ * Menú principal del sistema HelpDesk U. Se muestra después de un
+ * inicio de sesión exitoso y permite acceder a los submenús de
+ * departamentos, tickets y diccionarios.
  *
- * Desde aquí se accede a:
- * <ul>
- *     <li>Gestión de departamentos</li>
- *     <li>Gestión de tickets</li>
- *     <li>Gestión de diccionarios y palabras</li>
- * </ul>
- *
- * La clase forma parte de la capa de Interfaz de Usuario (UI) y delega
- * toda la lógica al {@link Controller}.
- *
+ * La clase pertenece a la capa de Interfaz de Usuario (UI) y delega
+ * toda la lógica operativa al {@link Controller}.
  */
 public class MenuPrincipal {
 
+    /** Utilidad para entrada desde la consola. */
     private IO io = new IO();
+
+    /** Controlador principal del sistema. */
     private Controller controller;
 
+    /** Submenú de departamentos. */
     private MenuDepartamento menuDepartamento;
-    private MenuTicket       menuTicket;
-    private MenuDiccionario  menuDiccionario;
+
+    /** Submenú de tickets. */
+    private MenuTicket menuTicket;
+
+    /** Submenú de diccionarios. */
+    private MenuDiccionario menuDiccionario;
 
     /**
-     * Constructor del menú principal.
+     * Construye el menú principal y crea las instancias de
+     * los submenús específicos del sistema.
      *
-     * @param controller instancia del controlador principal del sistema.
+     * @param controller controlador principal
      */
     public MenuPrincipal(Controller controller) {
         this.controller = controller;
@@ -40,26 +41,38 @@ public class MenuPrincipal {
     }
 
     /**
-     * Inicia el menú principal y muestra sus opciones en un ciclo.
-     * El menú se ejecuta hasta que el usuario selecciona la opción 0 (Salir).
+     * Inicia el menú principal en un ciclo interactivo que se mantiene
+     * hasta que el usuario selecciona la opción de cerrar sesión.
      */
-    public void iniciar(){
+    public void iniciar() {
         int op;
-        do{
-            System.out.println("\n=== MENÚ PRINCIPAL ===");
-            System.out.println("1) Departamentos (registrar / listar)");
-            System.out.println("2) Tickets (registrar / listar)");
-            System.out.println("3) Diccionarios/Palabras (crear / agregar / listar)");
-            System.out.println("0) Salir");
+        do {
+            System.out.println("\n────────────────────────────────────────");
+            System.out.println("                HELP DESK U");
+            System.out.println("              MENÚ PRINCIPAL");
+            System.out.println("────────────────────────────────────────");
+
+            String nombreUsuario = controller.getNombreUsuarioActual();
+            if (nombreUsuario != null && !nombreUsuario.isBlank()) {
+                System.out.println("Usuario conectado: " + nombreUsuario + "\n");
+            }
+
+            System.out.println("¿Qué desea gestionar?\n");
+            System.out.println("  [1] Departamentos");
+            System.out.println("  [2] Tickets");
+            System.out.println("  [3] Diccionarios y palabras\n");
+            System.out.println("  [0] Cerrar sesión y salir");
+            System.out.println("────────────────────────────────────────");
+
             op = io.i("Opción: ");
 
-            switch (op){
+            switch (op) {
                 case 1 -> menuDepartamento.mostrar();
                 case 2 -> menuTicket.mostrar();
                 case 3 -> menuDiccionario.mostrar();
-                case 0 -> System.out.println("¡Adiós!");
-                default -> System.out.println("Opción inválida.");
+                case 0 -> System.out.println("\nCerrando sesión... ¡Hasta pronto!");
+                default -> System.out.println("\nOpción inválida. Intente nuevamente.\n");
             }
-        } while(op != 0);
+        } while (op != 0);
     }
 }

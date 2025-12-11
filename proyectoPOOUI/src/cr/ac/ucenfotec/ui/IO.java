@@ -5,23 +5,20 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- * Clase encargada de manejar la entrada de datos desde consola.
- * Utiliza BufferedReader para evitar los problemas comunes de Scanner
- * y garantizar una lectura limpia y controlada.
- *
- * Esta clase forma parte de la capa de Interfaz de Usuario (UI)
- * y su única responsabilidad es capturar texto y números ingresados
- * por el usuario.
+ * Gestiona la lectura de datos desde la consola.
+ * Proporciona métodos simples para leer texto y números enteros.
  */
 public class IO {
 
+    /** Lector de entrada estándar desde consola. */
     private BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
     /**
-     * Lee una línea completa como texto desde la consola.
+     * Lee una línea de texto desde la consola.
      *
-     * @param prompt Mensaje que se muestra al usuario.
-     * @return La línea ingresada por el usuario, sin espacios alrededor.
+     * @param prompt mensaje que se muestra al usuario
+     * @return texto ingresado por el usuario, sin espacios al inicio ni al final;
+     *         o cadena vacía si ocurre un error de lectura
      */
     public String str(String prompt) {
         System.out.print(prompt);
@@ -33,11 +30,10 @@ public class IO {
     }
 
     /**
-     * Lee un número entero desde consola. Si el usuario ingresa algo inválido,
-     * se retorna -1 como valor de error.
+     * Lee un número entero desde la consola.
      *
-     * @param prompt Mensaje que se muestra al usuario.
-     * @return Número entero ingresado o -1 si ocurre un error.
+     * @param prompt mensaje que se muestra al usuario
+     * @return número entero ingresado o {@code -1} si el valor no es válido
      */
     public int i(String prompt) {
         System.out.print(prompt);
